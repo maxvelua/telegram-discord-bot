@@ -1,8 +1,9 @@
 require('dotenv').config();
 
 const { Telegraf } = require('telegraf');
+const discordController = require('./controllers/discord.controller');
+const telegramService = require('./services/telegram.service');
 const express = require('express');
-const request = require('request');
 
 if (!process.env.TELEGRAM_BOT_API_KEY) {
     console.log('Add your telegram bot api key to .env file');
@@ -18,11 +19,19 @@ client.help((ctx) => ctx.reply('Send me a sticker'));
 client.command('stats', (ctx) => {
 
 });
-client.on('message', async (ctx) => {  
-    // send post request to discord bot
-    request.post({ url: 'http://localhost:3001/discord/message', form: { message: ctx.message.text } }, function callback(err, httpReposen, body) {
-        ctx.reply(body);
-    });
+client.on('message', async (ctx) => {
+    const type = ctx.updateSubTypes[0];
+
+    if (type === 'animation' ||
+        type === 'photo' ||
+        type === 'video' ||
+        type === 'voice') {
+
+        const content = await telegramService.getContentObject(ctx.telegram, ctx.update.message, type);
+        const response = await discordController.sendContent(JSON.stringify(content));
+
+        ctx.reply(response);
+    }
 });
 
 // express routs
