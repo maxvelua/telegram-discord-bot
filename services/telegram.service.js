@@ -17,6 +17,9 @@ module.exports.getContentObject = async function (client, message, type) {
             id = message.animation;
             fileSize = message.animation.file_size;
             break;
+        case 'sticker':
+            id = message.sticker;
+            fileSize = message.sticker.file_size;
     }
 
     if (id) {

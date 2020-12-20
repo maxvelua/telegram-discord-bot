@@ -20,6 +20,7 @@ client.on('message', async (ctx) => {
     const type = ctx.updateSubTypes[0];
 
     if (type === 'animation' ||
+        (type === 'sticker' && !ctx.update.message.sticker.is_animated) ||
         type === 'photo' ||
         type === 'video') {
 
