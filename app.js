@@ -16,27 +16,25 @@ const app = express();
 // telegram side
 client.start((ctx) => ctx.reply('Welcome'));
 client.help((ctx) => ctx.reply('Send me a sticker'));
-client.command('stats', (ctx) => {
-
-});
 client.on('message', async (ctx) => {
     const type = ctx.updateSubTypes[0];
 
     if (type === 'animation' ||
         type === 'photo' ||
-        type === 'video' ||
-        type === 'voice') {
+        type === 'video') {
 
         const content = await telegramService.getContentObject(ctx.telegram, ctx.update.message, type);
-        const response = await discordController.sendContent(JSON.stringify(content));
+        const maxUploadFileSize = await discordController.getMaxUploadFileSize();
 
-        ctx.reply(response);
+        if (content.fileSize < maxUploadFileSize) {
+            const response = await discordController.sendContent(JSON.stringify(content));
+            ctx.reply(response);
+        } else {
+            ctx.reply('Your meme is too big, pls boost your server❗');
+        }
+    } else {
+        ctx.reply('This meme type doesn\'t support yet❗');
     }
-});
-
-// express routs
-app.get('/test', (req, res) => {
-    return res.send('Received a GET HTTP method');
 });
 
 // start
