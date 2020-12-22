@@ -12,22 +12,22 @@ if (!process.env.TELEGRAM_BOT_API_KEY ||
     return;
 }
 
-const client = new Telegraf(process.env.TELEGRAM_BOT_API_KEY);
+const bot = new Telegraf(process.env.TELEGRAM_BOT_API_KEY);
 const app = express();
 
 // telegram side
-client.start((ctx) => ctx.reply('Просто відправ мені мемас, а решту роботи я зроблю за тебе.'));
+bot.start((ctx) => ctx.reply('Просто відправ мені мемас, а решту роботи я зроблю за тебе.'));
 
-client.help((ctx) => ctx.reply(
+bot.help((ctx) => ctx.reply(
     'Відправляй мені мемаси, а я перекину їх в дс.' +
     '\nНаразі бот працює тільки з одним сервером.' +
     `\n${process.env.DISCORD_INVITE_URL}` +
     `\n @${process.env.TELEGRAM_USERNAME}`)
 );
 
-client.on('message', async (ctx) => {
+bot.on('message', async (ctx) => {
     const type = ctx.updateSubTypes[0];
-    console.log(ctx);
+
     if (type === 'animation' ||
         (type === 'sticker' && !ctx.update.message.sticker.is_animated) ||
         type === 'photo' ||
@@ -49,7 +49,7 @@ client.on('message', async (ctx) => {
 });
 
 // start
-client.launch();
+bot.launch();
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Telegram app listening on port ${process.env.PORT || 3000}`);
 });
