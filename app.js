@@ -25,6 +25,14 @@ bot.help((ctx) => ctx.reply(
     `\n @${process.env.TELEGRAM_USERNAME}`)
 );
 
+bot.command('meme', (ctx) => ctx.reply(
+    'Бот може відправляти:\n' +
+        '   відео,\n' +
+        '   картинки,\n' +
+        '   гіфки,\n' +
+        '   стікери (не анімовані)\n'
+));
+
 bot.on('message', async (ctx) => {
     const type = ctx.updateSubTypes[0];
 
@@ -42,9 +50,11 @@ bot.on('message', async (ctx) => {
         } else {
             ctx.reply('Ваш мем занадто великий, будь ласка, прискорте сервер❗');
         }
+    } else if (type === 'text' && ctx.update.message.text[0] === '/') {
+        ctx.reply('Команду не знайдено');
     } else {
         ctx.reply('Це тип мемів ще  не підтримується❗' +
-            '\n\\meme щоб дізнатись більше про можливості бота.');
+        '\n\\meme щоб дізнатись більше про можливості бота.');
     }
 });
 
