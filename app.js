@@ -7,7 +7,9 @@ const express = require('express');
 
 if (!process.env.TELEGRAM_BOT_API_KEY ||
     !process.env.DISCORD_INVITE_URL ||
-    !process.env.TELEGRAM_USERNAME) {
+    !process.env.TELEGRAM_USERNAME ||
+    !process.env.DISCORD_APP_PORT ||
+    !process.env.PORT) {
     console.log('Pls check api keys in .env file');
     return;
 }
@@ -60,6 +62,6 @@ bot.on('message', async (ctx) => {
 
 // start
 bot.launch();
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Telegram app listening on port ${process.env.PORT || 3000}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Telegram app listening on port ${process.env.PORT}`);
 });
